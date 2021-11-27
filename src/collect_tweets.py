@@ -30,7 +30,7 @@ def initialize():
 
 
 def meets_conditions(tweet):
-    if tweet.in_reply_to_status_id is None: #tweet.user.location != "" and not hasattr(tweet, 'retweeted_status') and
+    if tweet.in_reply_to_status_id is None and not hasattr(tweet, 'retweeted_status'): #tweet.user.location != ""
         return True
 
 def fetch_tweets(output, num_tweets):
@@ -41,8 +41,8 @@ def fetch_tweets(output, num_tweets):
         [tweet_list.append(row) for row in csvr]
     tweet_count = 0
     with open(output, 'w', encoding='utf-8', newline='') as c, open(output+'.json', 'w') as j:#, open(output+'.txt', 'w', encoding='utf-8') as t:
-        while tweet_count < 2000:
-            tweets = api.search_tweets(words, lang='en', result_type='mixed', count=num_tweets, tweet_mode='extended')
+        while tweet_count < 200:
+            tweets = api.search_tweets(words, lang='en', result_type='recent', count=num_tweets, tweet_mode='extended')
             #tweets = client.search_recent_tweets(query='covid lang:en', max_results=10, expansions = ["author_id"])
             csvw = csv.writer(c, delimiter=';', quoting=csv.QUOTE_ALL)
             for tweet in tweets:
