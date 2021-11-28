@@ -15,7 +15,9 @@ access_token_secret = None
 bearer_token = None
 auth = None
 client = None
-keywords = ['covid', 'vaccine', 'vaccination', 'vaccinated', 'pfizer', 'moderna', 'astrazeneca']
+keywords = ['covid', 'covid19', 'coronavirus', 'vaccine', 'vaccination', 'vaccinated',
+            'antivax', 'vaxer', 'vaxxer', 'antivaxer', 'antivaxxer', 'antivaxxers', 'antivaxers', 'vaxxed',
+            'vaxed', 'pfizer', 'moderna', 'astrazeneca']
 
 
 def initialize():
@@ -26,8 +28,6 @@ def initialize():
     auth = tw.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
     api = tw.API(auth, wait_on_rate_limit=True)
-    #client = tw.Client(bearer_token, consumer_key, consumer_secret, access_token, access_token_secret, wait_on_rate_limit=True)
-
 
 def meets_conditions(tweet):
     if tweet.in_reply_to_status_id is None and not hasattr(tweet, 'retweeted_status'): #tweet.user.location != ""
@@ -36,14 +36,10 @@ def meets_conditions(tweet):
 def fetch_tweets(output, num_tweets):
     words = ' OR '.join(keywords) + ' OR ' + ' OR #'.join(keywords)
     tweet_list = []
-    with open('tweets1.csv', newline='', encoding='utf-8') as f:
-        csvr = csv.reader(f, delimiter=';')
-        [tweet_list.append(row) for row in csvr]
     tweet_count = 0
-    with open(output, 'w', encoding='utf-8', newline='') as c, open(output+'.json', 'w') as j:#, open(output+'.txt', 'w', encoding='utf-8') as t:
-        while tweet_count < 200:
+    with open(osp.join(parent_dir, '..', 'tweets', output+'.csv'), 'w', encoding='utf-8', newline='') as c, open(osp.join(parent_dir, '..', 'json', output+'.json'), 'w') as j:
+        while tweet_count < 500:
             tweets = api.search_tweets(words, lang='en', result_type='recent', count=num_tweets, tweet_mode='extended')
-            #tweets = client.search_recent_tweets(query='covid lang:en', max_results=10, expansions = ["author_id"])
             csvw = csv.writer(c, delimiter=';', quoting=csv.QUOTE_ALL)
             for tweet in tweets:
                 if meets_conditions(tweet):
@@ -51,19 +47,16 @@ def fetch_tweets(output, num_tweets):
                     if tweet_row not in tweet_list:
                         tweet_list.append(tweet_row)
                         csvw.writerow(tweet_row)
-                        #print(f"text: {tweet.full_text}")
-                        #t.write(str(tweet))
-                        #print(f'time_zone: {tweet.user.time_zone}, utc_offset: {tweet.user.utc_offset}, place: {tweet.place}, loc: {tweet.user.location}')
                         json.dump(tweet._json, j, indent = 4)
                         tweet_count += 1
                         print(tweet_count)
             print('sleeping')
-            sleep(1)
+            sleep(1.5)
 
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument('output')
     parser.add_argument('-n', '--num_tweets', default=1000)
-    parser.add_argument('-o', '--output', required=True)
     args = parser.parse_args()
 
     initialize()
