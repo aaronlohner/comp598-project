@@ -3,7 +3,7 @@
 This repository contains the code and report for a project aimed at making sense of discussions regarding COVID-19 on Twitter.
 
 ## Usage
-Follow the steps in the sections below to conduct the experiments as described in the report with your own tweet data. Alternatively, see the [Generate Analytical Information](https://github.com/aaronlohner/comp598-project#generate-analytic-information) section to use the data provided.
+Follow the steps in the sections below to conduct the experiments as described in the report with your own tweet data. Alternatively, see the [Generate Analytical Information](https://github.com/aaronlohner/comp598-project#generate-analytical-information) section below to use the data provided.
 
 ### Obtain New Tweets
 1. Create a [Twitter Developer Account](https://developer.twitter.com/en) with elevated access.
