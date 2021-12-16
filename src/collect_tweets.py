@@ -38,7 +38,7 @@ def fetch_tweets(output, num_tweets):
     tweet_list = []
     tweet_count = 0
     with open(osp.join(parent_dir, '..', 'tweets', output+'.csv'), 'w', encoding='utf-8', newline='') as c, open(osp.join(parent_dir, '..', 'json', output+'.json'), 'w') as j:
-        while tweet_count < 500:
+        while tweet_count < 1000:
             tweets = api.search_tweets(words, lang='en', result_type='recent', count=num_tweets, tweet_mode='extended')
             csvw = csv.writer(c, delimiter=';', quoting=csv.QUOTE_ALL)
             for tweet in tweets:
